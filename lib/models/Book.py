@@ -1,13 +1,18 @@
+# lib/models/book.py
 import ipdb
+from models.library import Library 
+from models.__init__ import CURSOR, CONN
 
 class Book:
 
     all = []
 
-    def __init__(self, title, author, year, owner=None):
+    def __init__(self, title, author, year, id=None):
+        self.id = id
         self.title = title
         self.author = author 
         self.year = year
+        self._library = library
 
     @property
     def title(self):
@@ -47,6 +52,19 @@ class Book:
             raise ValueError (
                 "Year must be an integer."
             )
+
+    @property
+    def library(self):
+        return self._library
+
+    @library.setter
+    def library(self, library):
+        if not isinstance(library, Library):
+            raise TypeError("Library must be an instance of Library class.")
+        self._library = library
+    
+
+    #Add create_table" class method to create books table
 
 ipdb.set_trace()
 
