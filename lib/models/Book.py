@@ -1,7 +1,7 @@
 # lib/models/book.py
 import ipdb
-from models.library import Library 
-from models.__init__ import CURSOR, CONN
+from library import Library 
+from __init__ import CURSOR, CONN
 
 class Book:
 
@@ -64,7 +64,57 @@ class Book:
         self._library = library
     
 
-    #Add create_table" class method to create books table
+    #Add create_table" class method to create books table if doesn't already exist
+    @classmethod
+    def create_table(cls):
+        sql = """
+            CREATE TABLE IF NOT EXISTS books
+                (id INTEGER PRIMARY KEY,
+                title TEXT,
+                author TEXT,
+                year INTEGER)
+        """
+
+        CURSOR.execute(sql)
+    
+    #Add drop_table method to drop "pets" Table if exists
+    @classmethod
+    def drop_table(cls):
+        sql = """
+            DROP TABLE IF EXISTS books
+        """
+
+        CURSOR.execute(sql)
+    
+    #Add "save" instance method to persist new "pet" instances to DB
+    def save(self):
+        sql = """
+            INSERT INTO books (title, author, year)
+            VALUES (?, ?, ?)
+        """
+
+        CURSOR.execute(sql, (self.title, self.author, self.title))
+
+    #Add "create" Class Method to initialize and save new "book" instances to DB 
+    #Persists new "book" instance to DB and creates an object that is an instance of the Department class
+    @classmethod
+    def create(cls, title, author, year):
+        book = cls(title, author, year)
+        book.save()
+        return book 
+
+    #Add "new_from_db" class method to retrieve the newest book instance with attributes from DB
+    @classmethod
+    def new_from_db(cls, row):
+        book = cls(
+           title=row[1],
+           author=row[2],
+           year=row[3],
+           id=row[0]
+        )
+
+        return book 
+
 
 ipdb.set_trace()
 
