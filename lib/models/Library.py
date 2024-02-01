@@ -1,5 +1,4 @@
-from __init__ import CURSOR, CONN 
-import ipdb
+from models.__init__ import CURSOR, CONN 
 
 class Library:
     all = {}
@@ -8,6 +7,11 @@ class Library:
         self.id = id 
         self.name = name 
         self.zip_code = zip_code
+
+    def __repr__(self):
+        return (
+            f"<Employee {self.id}: {self.name}, {self.zip_code}>" 
+        )
 
     @property
     def name(self):
@@ -139,15 +143,13 @@ class Library:
         return cls.instance_from_db(row)
     
     def books(self):
-        from book import Book
+        from models.book import Book
         sql = """
             SELECT * FROM books
             WHERE library_id = ?
         """
         CURSOR.execute(sql, (self.id,))
-        
         rows = CURSOR.fetchall()
-        return [Book.instance_from_db(row) for row in rows]
         
-
-ipdb.set_trace()
+        return [Book.instance_from_db(row) for row in rows]
+    

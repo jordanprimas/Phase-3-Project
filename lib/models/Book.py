@@ -1,18 +1,24 @@
 # lib/models/book.py
-import ipdb
-from library import Library 
-from __init__ import CURSOR, CONN
+
+from models.library import Library 
+from models.__init__ import CURSOR, CONN
 
 class Book:
 
     all = {}
 
-    def __init__(self, title, author, year, id=None):
+    def __init__(self, title, author, year, library_id, id=None):
         self.id = id
         self.title = title
         self.author = author 
         self.year = year
-        #self._library = library
+        self.library_id = library_id
+
+    def __repr__(self):
+        return (
+            f"<Book {self.id}: {self.title}, {self.author}, {self.year} " +
+            f"Library ID: {self.library_id}>"
+        )
 
     @property
     def title(self):
@@ -24,7 +30,7 @@ class Book:
             self._title = title
         else:
             raise ValueError(
-                "Title must be a string with at least 1 character."
+                "Title must be a non-empty string."
             )
 
     @property
@@ -37,7 +43,7 @@ class Book:
             self._author = author
         else:
             raise ValueError(
-                "Author must be a string with at least 1 character."
+                "Author must be a non-empty string."
             )
 
     @property
@@ -46,24 +52,24 @@ class Book:
     
     @year.setter
     def year(self, year):
-        if isinstance(year, int):
+        if isinstance(year, int) and len(str(year)) == 4:
             self._year = year
         else:
-            raise ValueError (
-                "Year must be an integer."
-            )
+            raise ValueError(
+                "Year must be an integer with 4 characters."
+        )
 
     @property
-    def library(self):
-        return self._library
+    def library_id(self):
+        return self._library_id
 
-    @library.setter
-    def library(self, library):
-        if not isinstance(library, Library):
-            raise TypeError("Library must be an instance of Library class.")
-        self._library = library
+    @library_id.setter
+    def library_id(self, library_id):
+        if type(library_id) is int and Library.find_by_id(library_id):
+            self._library_id = library_id
+        else:
+            raise ValueError("library_id must reference a library in the database.")
     
-
     #Add create_table" class method to create books table if doesn't already exist
     @classmethod
     def create_table(cls):
@@ -72,7 +78,7 @@ class Book:
                 (id INTEGER PRIMARY KEY,
                 title TEXT,
                 author TEXT,
-                year INTEGER),
+                year INTEGER,
                 library_id INTEGER,
                 FOREIGN KEY (library_id) REFERENCES library(id))
         """
@@ -94,7 +100,7 @@ class Book:
     def save(self):
         sql = """
             INSERT INTO books (title, author, year, library_id)
-            VALUES (?, ?, ?)
+            VALUES (?, ?, ?, ?)
         """
 
         CURSOR.execute(sql, (self.title, self.author, self.year, self.library_id))
@@ -137,9 +143,9 @@ class Book:
     def instance_from_db(cls, row):
         book = cls.all.get(row[0])
         if book: 
-           book.title = row[1],
-           book.author = row[2],
-           book.year = row[3],
+           book.title = row[1]
+           book.author = row[2]
+           book.year = row[3]
            book.library_id=row[4]
         else:
             book = cls(row[1], row[2], row[3], row[4])
@@ -186,9 +192,7 @@ class Book:
 
         if not row:
             return None 
-
         return cls.instance_from_db(row)
 
-ipdb.set_trace()
 
           
