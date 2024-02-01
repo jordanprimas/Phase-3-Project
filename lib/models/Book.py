@@ -26,7 +26,7 @@ class Book:
 
     @title.setter
     def title(self, title):
-        if isinstance(title, str) and len(title):
+        if isinstance(title, str) and len(title) > 0:
             self._title = title
         else:
             raise ValueError(
@@ -193,6 +193,21 @@ class Book:
         if not row:
             return None 
         return cls.instance_from_db(row)
+
+    def library(self):
+        sql = """
+            SELECT * FROM libraries
+            WHERE id = ?
+            LIMIT 1
+        """ 
+        CURSOR.execute(sql, (self.library_id,))
+        row = CURSOR.fetchone()
+
+        if not row:
+            return None 
+        return Library.instance_from_db(row)
+    
+
 
 
           

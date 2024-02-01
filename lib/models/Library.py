@@ -10,7 +10,7 @@ class Library:
 
     def __repr__(self):
         return (
-            f"<Employee {self.id}: {self.name}, {self.zip_code}>" 
+            f"<Library {self.id}: {self.name}, {self.zip_code}>" 
         )
 
     @property

@@ -8,8 +8,14 @@ from helpers import (
     create_book,
     update_book,
     delete_book,
-    list_all_library_books,
-
+    find_book_library,
+    list_libraries,
+    find_library_by_name,
+    find_library_by_id,
+    create_library,
+    update_library,
+    delete_library,
+    list_library_books,
 )
 
 
@@ -31,8 +37,22 @@ def main():
             update_book()
         elif choice == "6":
             delete_book()
+        elif choice == "7":
+            find_book_library()
+        elif choice == "8":
+            list_libraries()
+        elif choice == "9":
+            find_library_by_name()
+        elif choice == "10":
+            find_library_by_id()
+        elif choice == "11":
+            create_library()
+        elif choice == "12":
+            update_library()
+        elif choice == "13":
+            delete_library()
         elif choice == "14":
-            list_all_library_books()
+            list_library_books()
         else:
             print("Invalid choice")
 
