@@ -10,15 +10,15 @@ def list_books():
 def find_book_by_title():
     title = input("Enter the book's title: ")
     book = Book.find_by_title(title)
-    print(book) if title else print(
+    print(book) if book else print(
         f'Book {title} not found'
     )
 
 def find_book_by_id():
-    id = input("Enter the book's id: ")
-    book = Book.find_by_id(id)
-    print(book) if id else print(
-        f'Book {id} not found'
+    id_ = input("Enter the book's id: ")
+    book = Book.find_by_id(id_)
+    print(book) if book else print(
+        f'Book {id_} not found'
     )
 
 def create_book():
@@ -71,9 +71,9 @@ def find_book_library():
     id_ = int(input("Enter the book's id: "))
     if book := Book.find_by_id(id_):
         library = book.library()
-        print(library) if library else print(
-            f'Book {id_} not found'
-        ) 
+        print(library) 
+    else:
+         print(f'Book {id_} not found')
 
 def list_libraries():
     libraries = Library.get_all()
@@ -121,8 +121,8 @@ def update_library():
             print(f'Success: {library.name} updated')
         except Exception as exc:
             print("Error updating library: ", exc)
-        else:
-            print(f'Library {id_} not found')
+    else:
+        print(f'Library {id_} not found')
 
 def delete_library():
     id_ = input("Enter the library's id: ")
