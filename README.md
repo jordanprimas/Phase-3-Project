@@ -1,171 +1,28 @@
 # Phase 3 CLI+ORM Project Template
 
-## Learning Goals
-
-- Discuss the basic directory structure of a CLI.
-- Outline the first steps in building a CLI.
-
----
-
 ## Introduction
+A database for managing books and their libraries.
 
-You now have a basic idea of what constitutes a CLI. Fork and clone this lesson
-for a project template for your CLI.
+## Requirements For Generating Your Environment
 
-Take a look at the directory structure:
+* Have python installed 
 
-```console
-.
-├── Pipfile
-├── Pipfile.lock
-├── README.md
-└── lib
-    ├── models
-    │   ├── __init__.py
-    │   └── model_1.py
-    ├── cli.py
-    ├── debug.py
-    └── helpers.py
-```
+## Repo URL 
+[Repository link](https://github.com/jordanprimas/python-p3-conditional-statements.git)
 
-Note: The directory also includes two files named `CONTRIBUTING.md` and
-`LICENSE.md` that are specific to Flatiron's curriculum. You can disregard or
-delete the files if you want.
+## Interacting With The CLI
+`cli.py` is a simple CLI that interacts with a library management database. 
+When the user runs the script a menu of options will appear in the terminal. The script is a loop and the user will indicate they want to exit using option 0. There are six options that allow for book management starting with `list_books()` which lists all the books in the database. `find_book_by_title()` allows the user to get a book in the database using it's title. `find_book_by_id()` allows the user to find a book in the database using it's id. Next there is `create_book()` which creates a new book row in the database. It also has the appropriate type validation and will raise an error if the data type input is incorrect. `update_book()` finds a book in the database using it's id and then updates any of the book's attributes according to the input data. This method will also performing type checks against the input data. `delete_book()` prompts the user to input an id and then deletes the respective book from the database. Finally there is `find_book_library()` which will prompt the user to enter the id of a book and then returns the library object that owns that book. 
+Next there are functions for managing the libraries. `list_libraries()` allows the user to get all the libraries in the database. Next there is `find_library_by_name()` and `find_library_by_id()` which will allow the user to find a library in the database by inputting it's name or id respectivly. `create_library()` will prompt the user to input data for a new library and add it to the database if the data types don't raise an error when validating. `update_library()` finds a library in the database using it's id and then updates any of the library's attributes according to the input data. `delete_library()` prompts the user to input an id and will delete the corresponding library from the database. Finally `list_library_books()` allows the user to find all books in a library by intputting the library's id. 
+Many of the methods above include type validation to ensure that the correct data type is being passed to the database. When troubleshooting recall that this may be the cause of a ValueError your a recieving when interacting with the database.  
 
----
+### Interacting With The Models
+This project contains two classes with a two way one-to-many relationship model. 
 
-## Generating Your Environment
+The `book.py` file contains the `Book` class which is responsible for all books within the database. `Book` is initialized with `title`, `author`, `year`, and `library_id`attributes. The `__repr__()` magic method then takes an object and returns a readble string representation. The `title()`,`author()`, and `year()` properties then ensure the validity of the attributes values and raise an error if they are not. The `library_id()` property will also check for the validity of it's attribute ensuring that the `library_id` matches the id of a library within the database. The `create_table()` classmethod is used to create a new book table in the database if it doesn't already exist. This table will have all of the previously defined attributes as columns. The `drop_table()` classmethod is used to delete the book table from the database. `save()` will allow the user to save the attributes of a new instance to a book table row with a unique id. `create()` is a classmethod that allows the user create a new book instance and save it to the database in one step. `update()` and `delete()` methods update and delete a book from the database respectivly using it's id. `instance_from_db()` retrieves the newest instance from the class variable `all` or if the instance isn't found it updates `all` to contain the newest instance and then returns it. The `get_all()` classmethod queries the database and returns all the books then passes each one to `instance_from_db()` to be formatted. Next the `find_by_title` and `find_by_id` classmethods query the database and return one book matching the input title or id respectivly. Finally `library()` queries the database and returns library with a matching `id` to the instance's `library_id`. 
 
-You might have noticed in the file structure- there's already a Pipfile!
+The `library.py` file contains the `Library` class which is responsible for all libraries within the database. `Library` is initialized with `name` and `zip_code` attributes. The `__repr__()` magic method then takes an object and returns a readble string representation. The `name()` and `zip_code()` properties then ensure the validity of the attributes values and raise an error if they are not. The `create_table()` classmethod is used to create a new library table in the database if it doesn't already exist. This table will have all of the previously defined attributes as columns. The `drop_table()` classmethod is used to delete the library table from the database. `save()` will allow the user to save the attributes of a new instance to a library table row with a unique id. `create()` is a classmethod that allows the user create a new library instance and save it to the database in one step. `update()` and `delete()` methods update and delete a library from the database respectivly using it's `id`. `instance_from_db()` retrieves the newest instance from the class variable `all` or if the instance isn't found it updates `all` to contain the newest instance and then returns it. The `get_all()` classmethod queries the database and returns all the libraries then passes each one to `instance_from_db()` to be formatted. Next the `find_by_title` and `find_by_id` classmethods query the database and return one library matching the input title or `id `respectivly. Finally `books()` queries the database and returns all the books with a matching `library_id` to the instance's `id`. 
 
-Install any additional dependencies you know you'll need for your project by
-adding them to the `Pipfile`. Then run the commands:
-
-```console
-pipenv install
-pipenv shell
-```
-
----
-
-## Generating Your CLI
-
-A CLI is, simply put, an interactive script and prompts the user and performs
-operations based on user input.
-
-The project template has a sample CLI in `lib/cli.py` that looks like this:
-
-```py
-# lib/cli.py
-
-from helpers import (
-    exit_program,
-    helper_1
-)
-
-
-def main():
-    while True:
-        menu()
-        choice = input("> ")
-        if choice == "0":
-            exit_program()
-        elif choice == "1":
-            helper_1()
-        else:
-            print("Invalid choice")
-
-
-def menu():
-    print("Please select an option:")
-    print("0. Exit the program")
-    print("1. Some useful function")
-
-
-if __name__ == "__main__":
-    main()
-```
-
-The helper functions are located in `lib/helpers.py`:
-
-```py
-# lib/helpers.py
-
-def helper_1():
-    print("Performing useful function#1.")
-
-
-def exit_program():
-    print("Goodbye!")
-    exit()
-```
-
-You can run the template CLI with `python lib/cli.py`, or include the shebang
-and make it executable with `chmod +x`. The template CLI will ask for input, do
-some work, and accomplish some sort of task.
-
-Past that, CLIs can be whatever you'd like, as long as you follow the project
-requirements.
-
-Of course, you will update `lib/cli.py` with prompts that are appropriate for
-your application, and you will update `lib/helpers.py` to replace `helper_1()`
-with a useful function based on the specific problem domain you decide to
-implement, along with adding other helper functions to the module.
-
-In the `lib/models` folder, you should rename `model_1.py` with the name of a
-data model class from your specific problem domain, and add other classes to the
-folder as needed. The file `lib/models/__init__.py` has been initialized to
-create the necessary database constants. You need to add import statements to
-the various data model classes in order to use the database constants.
-
-You are also welcome to implement a different module and directory structure.
-However, your project should be well organized, modular, and follow the design
-principal of separation of concerns, which means you should separate code
-related to:
-
-- User interface
-- Data persistence
-- Problem domain rules and logic
-
----
-
-## Updating README.md
-
-`README.md` is a Markdown file that should describe your project. You will
-replace the contents of this `README.md` file with a description of **your**
-actual project.
-
-Markdown is not a language that we cover in Flatiron's Software Engineering
-curriculum, but it's not a particularly difficult language to learn (if you've
-ever left a comment on Reddit, you might already know the basics). Refer to the
-cheat sheet in this assignments's resources for a basic guide to Markdown.
-
-### What Goes into a README?
-
-This README serves as a template. Replace the contents of this file to describe
-the important files in your project and describe what they do. Each Python file
-that you edit should get at least a paragraph, and each function should be
-described with a sentence or two.
-
-Describe your actual CLI script first, and with a good level of detail. The rest
-should be ordered by importance to the user. (Probably functions next, then
-models.)
-
-Screenshots and links to resources that you used throughout are also useful to
-users and collaborators, but a little more syntactically complicated. Only add
-these in if you're feeling comfortable with Markdown.
-
----
-
-## Conclusion
-
-A lot of work goes into a good CLI, but it all relies on concepts that you've
-practiced quite a bit by now. Hopefully this template and guide will get you off
-to a good start with your Phase 3 Project.
-
-Happy coding!
-
----
 
 ## Resources
 
