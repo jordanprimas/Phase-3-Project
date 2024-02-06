@@ -39,15 +39,19 @@ def update_library(id_):
             name = input("Enter the library's new name: ")
             library.name = name
             zip_code = input("Enter the library's new zip code: ")
-            library.zip_code = zip_code
 
             if zip_code.isdigit():
+                zip_code = int(zip_code)
+                library.zip_code = zip_code
                 library.update()
                 print(f'Success: {library.name} updated')
+            else:
+                print("Error updating: Zip code must be a number.")
         except Exception as exc:
             print("Error updating library: ", exc)
     else:
-        print(f'Library {library.name} not found')
+        print(f'Error updating: Library not found')
+
 
 def delete_library(id_):
     if library := Library.find_by_id(id_):
@@ -56,9 +60,9 @@ def delete_library(id_):
     else:
         print(f'Error: Library not found')
 
-def list_library_books(id_):
+def list_library_books(library_id):
     book_info = []
-    if library := Library.find_by_id(id_):
+    if library := Library.find_by_id(library_id):
         books = library.books()
         for i, book in enumerate(books, start=1):
             book_info.append((i, book.title, book.id))
@@ -70,16 +74,15 @@ def book_details(title):
     if book:
         print(f'Name: {book.title}, Author: {book.author}, Year:{book.year}')
 
-def create_book():
+def create_book(id_):
     title = input("Enter the book's title: ")
     author = input("Enter the book's author: ")
     year_input = input("Enter the book's publishing year: ")
-    library_id_input = input("Enter the book's library_id: ")
+    library_id = id_
 
-    if year_input.isdigit() and library_id_input.isdigit():
+    if year_input.isdigit():
         try:
             year = int(year_input)
-            library_id = int(library_id_input)
             book = Book.create(title, author, year, library_id)
             print(f'Success: Book created')
         except Exception as exc:
@@ -87,8 +90,8 @@ def create_book():
     else:
         print("Error creating book: year and library id must be numbers")
 
-def update_book(id_):
-    if book := Book.find_by_id(id_):
+def update_book(book_id, library_id):
+    if book := Book.find_by_id(book_id):
         try:
             title = input("Enter the book's new name: ")
             if title:
@@ -104,21 +107,12 @@ def update_book(id_):
             else: 
                 print("Error updating: Year must be a number")
 
-            library_id = input("Enter the book's new library ID: ")
-            if library_id.isdigit():
-                book.library_id = int(library_id)
-            else:
-                print("Error updating: Library ID must be a number")
+            library = library_id 
 
             book.update()
             print(f'Success: {book.title} updated')
         except Exception as exc:
             print("Error updating book: ", exc)
-    
-     
-
-       
-            
 
 def delete_book(id_):
     if book := Book.find_by_id(id_):
