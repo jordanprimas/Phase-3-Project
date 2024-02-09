@@ -38,8 +38,8 @@ def update_library(id_):
         try:
             name = input("Enter the library's new name: ")
             library.name = name
-            zip_code = input("Enter the library's new zip code: ")
 
+            zip_code = input("Enter the library's new zip code: ")
             if zip_code.isdigit():
                 zip_code = int(zip_code)
                 library.zip_code = zip_code
@@ -72,7 +72,7 @@ def list_library_books(library_id):
 def book_details(title):
     book = Book.find_by_title(title)
     if book:
-        print(f'Name: {book.title}, Author: {book.author}, Year:{book.year}')
+        print(f'Title: {book.title}, Author: {book.author}, Year:{book.year}')
 
 def create_book(id_):
     title = input("Enter the book's title: ")

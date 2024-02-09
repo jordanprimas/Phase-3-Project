@@ -14,6 +14,7 @@ from helpers import (
     exit_program
 )
 
+separator = ('*' * 40)
 
 def main():
     while True:
@@ -22,13 +23,15 @@ def main():
         print("Type L or l to see all libraries")
 
         choice = input("> ")
-        if choice == "exit":
-            exit_program()
-        elif choice == "L" or choice == "l":
+        if choice == "L" or choice == "l":
+            print(separator)
             library_info = list_libraries()
+            print(separator)
             libraries_menu(library_info)
+        elif choice == "exit":
+            exit_program()
         else:
-            print("Invalid choice")
+            print("Invalid choice")  
 
 
 def libraries_menu(library_info):
@@ -46,14 +49,20 @@ def libraries_menu(library_info):
                 library_name = library_info[choice - 1][1]
                 library_id = library_info[choice - 1][2]
 
+                print(separator)
                 library_details(library_name)
+                print(separator)
+
                 library_menu(library_id, library_info)
                 
             else:
                 print("Invalid choice")
         elif choice == "add":
             create_library()
-            list_libraries()
+            print(separator)
+            library_info = list_libraries()
+            print(separator)
+
         elif choice == "B" or choice == "b":
             main()
         elif choice == "exit":
@@ -64,14 +73,16 @@ def libraries_menu(library_info):
 def library_menu(library_id, library_info):
     while True:
         print("Type books to see all of the library's books")
-        print("Type delete to delete a library")
-        print("Type update to update a library")
+        print("Type delete to delete the library")
+        print("Type update to update the ibrary")
         print("Type B or b to go back to the previous menu")
         print("Type exit to exit program")
 
         choice = input("> ")
         if choice == "books":
+            print(separator)
             books_info = list_library_books(library_id) 
+            print(separator)
             books_menu(library_id, library_info, books_info)  
         elif choice == "delete":
             delete_library(library_id)
@@ -100,13 +111,20 @@ def books_menu(library_id, library_info, books_info):
                 book_id = books_info[choice - 1][2]
                 book_title = books_info[choice - 1][1]  
 
+                print(separator)
                 book_details(book_title)
+                print(separator)
+                
                 book_menu(book_id, books_info, library_id, library_info)
             else:
                 print("Invalid entry")
 
         elif choice == "add":
             create_book(library_id)
+            print(separator)
+            books_info = list_library_books(library_id) 
+            print(separator)
+
         elif choice.lower() == "b":
             library_menu(library_id, library_info)
         elif choice.lower() == "exit":
